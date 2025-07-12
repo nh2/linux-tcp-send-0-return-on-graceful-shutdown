@@ -18,7 +18,10 @@ send() returned: 30
 Unexpectedly sent 30 bytes.
 ```
 
-So far this disproves the claim, unless I did something wrong.
+This shows that graceful shutdown does not reliably cause `send()` to return 0.
+
+Now the only remaining question is whether it can cause `send()` to return 0 in _some specific_ situation, or if the claim is fully false.
+This repo hasn't done this yet.
 
 
 ## Background and links
