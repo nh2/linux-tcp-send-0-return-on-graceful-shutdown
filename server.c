@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <arpa/inet.h>
 
 #define PORT 8888
@@ -54,7 +55,18 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    printf("Client connected. The server will now wait for 1 second.\n");
+    printf("Client connected.\n");
+
+    // Enable TCP_NODELAY, so our `send()` actually happens when we call it.
+    printf("Setting TCP_NODELAY...\n");
+    int one = 1;
+    if (setsockopt(conn_fd, SOL_TCP, TCP_NODELAY, &one, sizeof(one)) == -1) {
+        perror("setsockopt(TCP_NODELAY) failed");
+        close(conn_fd);
+        exit(EXIT_FAILURE);
+    }
+
+    printf("The server will now wait for 1 second.\n");
 
     // 5. CRITICAL STEP: Wait for the client to close the connection.
     // This gives the client's FIN packet time to arrive and be processed.
