@@ -47,6 +47,7 @@ int main() {
     // Note we have to use `SHUT_RDWR` (value 2) instead of `SHUT_RD` (value `0`),
     // because on Linux, `SHUT_RD` has no effect and does not send TCP FIN,
     // see e.g.: https://github.com/WebAssembly/WASI/issues/547#issuecomment-2004647912
+    // (I cannot find this documented anywhere, but checked it in Wireshark on Linux 6.8.)
     printf("Immediately doing graceful close (shutdown()) on the connection.\n");
     shutdown(sock_fd, SHUT_RDWR);
 
