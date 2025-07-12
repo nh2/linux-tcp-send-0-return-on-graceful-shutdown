@@ -43,8 +43,12 @@ int main() {
 
     // 4. CRITICAL STEP: Immediately gracefully close the connection.
     // This sends a FIN packet to the server, starting the graceful shutdown.
+    //
+    // Note we have to use `SHUT_RDWR` (value 2) instead of `SHUT_RD` (value `0`),
+    // because on Linux, `SHUT_RD` has no effect and does not send TCP FIN,
+    // see e.g.: https://github.com/WebAssembly/WASI/issues/547#issuecomment-2004647912
     printf("Immediately doing graceful close (shutdown()) on the connection.\n");
-    shutdown(sock_fd, SHUT_RD);
+    shutdown(sock_fd, SHUT_RDWR);
 
     sleep(2); // during this time, the server code attempts the send()
 
